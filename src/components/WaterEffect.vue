@@ -31,7 +31,7 @@ const fragmentShader = `
     float distanceFromMouse = length(uv - uMouse);
     
     // Create ripple only when mouse moves (controlled by uMouseEffect)
-    float ripple = sin(distanceFromMouse * 40.0) * 0.2 * uMouseEffect;
+    float ripple = sin(distanceFromMouse * 40.0) * 0.1 * uMouseEffect;
      ripple *= smoothstep(0.16, 0.0, distanceFromMouse); // Tighter fade out effect
     
     // Apply distortion only around mouse position
