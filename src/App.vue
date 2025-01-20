@@ -61,8 +61,15 @@ body {
   font-family: "Nunito", sans-serif;
   font-weight: 500;
   position: relative;
-  overflow-y: hidden;
+
   width: 100vw;
+
+  #app,
+  main {
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+  }
 
   .shadow-overlay {
     position: fixed;
