@@ -19,6 +19,11 @@ import WaterEffect from "./components/WaterEffect.vue";
 
     <h2 class="ui-subtitle leading-tight text-right text-white">
       <img src="/logo.png" alt="Logo" />
+      <img
+        class="baseline"
+        src="/assembling.png"
+        alt="Là où le handicap sépare, FeliSweet assemble"
+      />
       <p>
         <span class="font-bold bg-sky-600"
           >combinant expertise féline <br />
@@ -130,6 +135,13 @@ body {
       transform: translateX(calc(-480px - 12vw));
     }
 
+    .baseline {
+      top: -8px;
+      right: 0;
+      width: 240px;
+      transform: translateX(calc(-240px - 16vw));
+    }
+
     p {
       margin-right: 20vw;
     }
@@ -172,9 +184,12 @@ body {
         transform: translateX(calc(-80vw));
       }
 
+      .baseline {
+        transform: translateX(calc(-72vw)) translateY(12px);
+      }
+
       p {
         margin-right: 10vw;
-        margin-top: 20px;
         font-size: 0.92rem;
         transform: translateX(10vw);
       }
