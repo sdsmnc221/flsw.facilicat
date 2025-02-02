@@ -9,7 +9,7 @@
     <img class="border" src="/border.png" alt="" />
 
     <main ref="mainEl">
-      <h1 ref="heading" class="ui-heading relative w-full h-[100vh] font-bold">
+      <h1 ref="heading" class="ui-heading fixed w-full h-[100vh] font-bold">
         <span
           class="fx-shadow text-sky-100 text-3xl leading-tight inline-block"
         >
@@ -34,17 +34,34 @@
           >
             les personnes en situation
             <br />
-            de handicap ou ayant des difficultés
+            <span class="text-6xl leading-[2rem]">de handicap</span>
+            <br />
+            <span class="text-lg leading-[1rem]" v-if="handicapText.length">
+              {{ handicapText }}</span
+            >
+
+            <!-- <span class="text-sky-100">ou</span> ayant des difficultés -->
           </strong>
           <span class="text-xl"> à s'occuper pleinement de leurs chats. </span>
         </span>
       </h2>
+
+      <div class="persona" />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { type Ref, ref, useTemplateRef, onMounted, nextTick, watch } from "vue";
+import {
+  type Ref,
+  ref,
+  useTemplateRef,
+  type ComputedRef,
+  computed,
+  onMounted,
+  nextTick,
+  watch,
+} from "vue";
 import { useScroll } from "@vueuse/core";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -58,12 +75,73 @@ const app = useTemplateRef<HTMLElement>("appEl");
 const logo = useTemplateRef<HTMLElement>("logoEl");
 const baseline = useTemplateRef<HTMLElement>("baselineEl");
 
-const { directions } = useScroll(app, {
-  behavior: "smooth",
-});
+// const { directions } = useScroll(app, {
+//   behavior: "smooth",
+// });
 
 const heading: Ref<HTMLElement | null> = ref(null);
 const scrollCount: Ref<number> = ref(0);
+
+const handicapProgress: Ref<number> = ref(0);
+const handicapText: ComputedRef<string> = computed(() => {
+  if (handicapProgress.value >= 0 && handicapProgress.value < 0.4) {
+    return "(permanent)";
+  } else if (handicapProgress.value >= 0.4 && handicapProgress.value < 0.58) {
+    return "(permanent, ponctuel)";
+  } else if (handicapProgress.value >= 0.58 && handicapProgress.value < 0.82) {
+    return "(permanent, ponctuel, enceinte)";
+  } else if (handicapProgress.value >= 0.82) {
+    return "(permanent, ponctuel, enceinte, invisible)";
+  }
+
+  return "";
+});
+
+const scrollPersona = () => {
+  const personaTl = gsap.timeline({
+    paused: true,
+    scrollTrigger: {
+      trigger: baseline.value,
+      start: `top+=${window.innerHeight * 2}px`,
+      end: `+=${window.innerHeight}px`,
+      scrub: true,
+      // markers: true,
+      onUpdate: (self) => {
+        handicapProgress.value = self.progress;
+      },
+    },
+  });
+
+  personaTl
+    .to(
+      ".persona",
+      {
+        backgroundImage: "url('/chatpieces-permanent.png')",
+      },
+      "0%"
+    )
+    .to(
+      ".persona",
+      {
+        backgroundImage: "url('/chatpieces-temporary.png')",
+      },
+      "48%"
+    )
+    .to(
+      ".persona",
+      {
+        backgroundImage: "url('/chatpieces-pregnant.png')",
+      },
+      "72%"
+    )
+    .to(
+      ".persona",
+      {
+        backgroundImage: "url('/chatpieces-invisible.png')",
+      },
+      "84%"
+    );
+};
 
 onMounted(() => {
   nextTick(() => {
@@ -73,12 +151,15 @@ onMounted(() => {
         scrollTrigger: {
           trigger: heading.value,
           start: "top top",
-          end: "bottom +=100px",
+          end: `+=${window.innerHeight}px`,
           pin: true,
           scrub: true,
           markers: true,
           onLeave: () => {
             scrollCount.value += 1;
+            gsap.set(".ui-heading", {
+              translateY: 0,
+            });
           },
           onEnterBack: () => {
             scrollCount.value -= 1;
@@ -90,7 +171,7 @@ onMounted(() => {
         duration: 2,
         ease: "power2.in",
         x: "-42vw",
-        y: "-31vh",
+        y: "-41.4vh",
         color: "red",
         scale: 0.64,
       })
@@ -120,6 +201,8 @@ onMounted(() => {
             y: "-10vh",
           }
         );
+
+      scrollPersona();
     }
   });
 });
@@ -127,8 +210,6 @@ onMounted(() => {
 watch(
   () => scrollCount.value,
   () => {
-    console.log(scrollCount.value);
-
     gsap.to([".light-overlay", ".border"], {
       duration: 1.2,
       ease: "power2.in",
@@ -147,7 +228,7 @@ body {
 }
 
 #app {
-  min-height: 200vh; // Double viewport height to allow scrolling
+  min-height: 600vh; // Double viewport height to allow scrolling
   width: 100%;
   position: relative;
 }
@@ -218,6 +299,9 @@ body {
   }
 
   .ui-heading {
+    top: 0;
+    left: 0;
+
     span {
       position: absolute;
       top: 50%;
@@ -242,6 +326,19 @@ body {
         display: block;
       }
     }
+  }
+
+  .persona {
+    position: fixed;
+    top: 50vh;
+    right: 12vw;
+    width: 200px;
+    height: 200px;
+    aspect-ratio: 1;
+    background-image: url("/chatpieces-permanent.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .ui-scan-code {
