@@ -10,13 +10,35 @@
 
     <main ref="mainEl">
       <h1 ref="heading" class="ui-heading relative w-full h-[100vh] font-bold">
-        <span class="text-sky-100 text-3xl leading-tight inline-block">
+        <span
+          class="fx-shadow text-sky-100 text-3xl leading-tight inline-block"
+        >
           une campagne, <br />
           qui deviendra <br />
           bientôt <br />
           un service.
         </span>
       </h1>
+
+      <h2
+        class="ui-subtitle fixed w-full h-[100vh] flex flex-col justify-center items-center"
+      >
+        <img ref="logoEl" src="/logo.png" alt="Logo" />
+        <span
+          ref="baselineEl"
+          class="baseline fx-shadow-white text-sky-700 text-4xl font-bold text-center leading-[1.4rem] uppercase inline-block"
+        >
+          Nous aidons
+          <strong
+            class="text-2xl leading-[1.4rem] font-semibold text-rose-700 lowercase"
+          >
+            les personnes en situation
+            <br />
+            de handicap ou ayant des difficultés
+          </strong>
+          <span class="text-xl"> à s'occuper pleinement de leurs chats. </span>
+        </span>
+      </h2>
     </main>
   </div>
 </template>
@@ -33,6 +55,8 @@ import WaterEffect from "./components/WaterEffect.vue";
 
 const main = useTemplateRef<HTMLElement>("mainEl");
 const app = useTemplateRef<HTMLElement>("appEl");
+const logo = useTemplateRef<HTMLElement>("logoEl");
+const baseline = useTemplateRef<HTMLElement>("baselineEl");
 
 const { directions } = useScroll(app, {
   behavior: "smooth",
@@ -43,7 +67,7 @@ const scrollCount: Ref<number> = ref(0);
 
 onMounted(() => {
   nextTick(() => {
-    if (heading.value) {
+    if (heading.value && logo.value) {
       const tl = gsap.timeline({
         paused: true,
         scrollTrigger: {
@@ -69,7 +93,33 @@ onMounted(() => {
         y: "-31vh",
         color: "red",
         scale: 0.64,
-      });
+      })
+        .fromTo(
+          logo.value,
+          {
+            opacity: 0,
+            y: "12vh",
+          },
+          {
+            duration: 2,
+            ease: "power2.in",
+            opacity: 1,
+            y: "-8vh",
+          }
+        )
+        .fromTo(
+          baseline.value,
+          {
+            opacity: 0,
+            y: "12vh",
+          },
+          {
+            duration: 2,
+            ease: "power2.in",
+            opacity: 1,
+            y: "-10vh",
+          }
+        );
     }
   });
 });
@@ -159,9 +209,16 @@ body {
     opacity: 0;
   }
 
+  .fx-shadow {
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .fx-shadow-white {
+    text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.4);
+  }
+
   .ui-heading {
     span {
-      text-shadow: 4px 3px 0 rgba(0, 0, 0, 0.2);
       position: absolute;
       top: 50%;
       left: 50%;
@@ -172,26 +229,18 @@ body {
   .ui-subtitle {
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.24));
 
+    top: 0;
+    left: 0;
+
     img {
-      position: relative;
-      left: 100%;
-      display: block;
-      right: 0;
-      top: 32px;
       width: 480px;
       height: auto;
-      transform: translateX(calc(-480px - 12vw));
     }
 
     .baseline {
-      top: -8px;
-      right: 0;
-      width: 240px;
-      transform: translateX(calc(-240px - 16vw));
-    }
-
-    p {
-      margin-right: 20vw;
+      strong {
+        display: block;
+      }
     }
   }
 
