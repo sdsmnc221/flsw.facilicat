@@ -39,8 +39,17 @@
             <span class="text-lg leading-[1rem]" v-if="handicapText.length">
               {{ handicapText }}</span
             >
-
-            <!-- <span class="text-sky-100">ou</span> ayant des difficultés -->
+          </strong>
+          <strong
+            class="text-2xl leading-[1.4rem] font-semibold text-rose-700 lowercase"
+          >
+            <span class="text-4xl leading-[2rem]">
+              <span class="text-sky-100">ou</span> ayant des difficultés
+            </span>
+            <br />
+            <span class="text-lg leading-[1rem]" v-if="troubleText.length">
+              {{ troubleText }}</span
+            >
           </strong>
           <span class="text-xl"> à s'occuper pleinement de leurs chats. </span>
         </span>
@@ -75,25 +84,42 @@ const app = useTemplateRef<HTMLElement>("appEl");
 const logo = useTemplateRef<HTMLElement>("logoEl");
 const baseline = useTemplateRef<HTMLElement>("baselineEl");
 
-// const { directions } = useScroll(app, {
-//   behavior: "smooth",
-// });
+const { directions } = useScroll(app, {
+  behavior: "smooth",
+});
 
 const heading: Ref<HTMLElement | null> = ref(null);
 const scrollCount: Ref<number> = ref(0);
 
 const handicapProgress: Ref<number> = ref(0);
 const handicapText: ComputedRef<string> = computed(() => {
-  if (handicapProgress.value >= 0 && handicapProgress.value < 0.4) {
+  if (handicapProgress.value >= 0.69) {
+    return "";
+  }
+
+  if (handicapProgress.value >= 0 && handicapProgress.value < 0.14) {
     return "(permanent)";
-  } else if (handicapProgress.value >= 0.4 && handicapProgress.value < 0.58) {
+  } else if (handicapProgress.value >= 0.14 && handicapProgress.value < 0.29) {
     return "(permanent, ponctuel)";
-  } else if (handicapProgress.value >= 0.58 && handicapProgress.value < 0.82) {
+  } else if (handicapProgress.value >= 0.29 && handicapProgress.value < 0.36) {
     return "(permanent, ponctuel, enceinte)";
-  } else if (handicapProgress.value >= 0.82) {
+  } else if (handicapProgress.value >= 0.36 && handicapProgress.value < 0.52) {
     return "(permanent, ponctuel, enceinte, invisible)";
   }
 
+  return "";
+});
+
+const troubleText: ComputedRef<string> = computed(() => {
+  if (handicapProgress.value >= 0.8) {
+    return "";
+  }
+
+  if (handicapProgress.value >= 0.57 && handicapProgress.value < 0.72) {
+    return "(travail)";
+  } else if (handicapProgress.value >= 0.72) {
+    return "(travail, voyage, autres problèmes)";
+  }
   return "";
 });
 
@@ -103,11 +129,12 @@ const scrollPersona = () => {
     scrollTrigger: {
       trigger: baseline.value,
       start: `top+=${window.innerHeight * 2}px`,
-      end: `+=${window.innerHeight}px`,
+      end: `+=${window.innerHeight * 2}px`,
       scrub: true,
       // markers: true,
       onUpdate: (self) => {
-        handicapProgress.value = self.progress;
+        handicapProgress.value = Number(self.progress.toFixed(2));
+        console.log(handicapProgress.value);
       },
     },
   });
@@ -125,21 +152,42 @@ const scrollPersona = () => {
       {
         backgroundImage: "url('/chatpieces-temporary.png')",
       },
-      "48%"
+      "30%"
     )
     .to(
       ".persona",
       {
         backgroundImage: "url('/chatpieces-pregnant.png')",
       },
-      "72%"
+      "40%"
     )
     .to(
       ".persona",
       {
         backgroundImage: "url('/chatpieces-invisible.png')",
       },
-      "84%"
+      "50%"
+    )
+    .to(
+      ".persona",
+      {
+        backgroundImage: "url('/chatpieces-working.png')",
+      },
+      "70%"
+    )
+    .to(
+      ".persona",
+      {
+        backgroundImage: "url('/chatpieces-traveling.png')",
+      },
+      "80%"
+    )
+    .to(
+      ".persona",
+      {
+        backgroundImage: "url('/chatpieces-permanent.png')",
+      },
+      "90%"
     );
 };
 
@@ -326,6 +374,7 @@ body {
         filter: drop-shadow(0 10px 10px rgba(255, 255, 255, 0.48));
         display: block;
       }
+      filter: drop-shadow(0 10px 10px rgba(255, 255, 255, 0.48));
     }
   }
 
