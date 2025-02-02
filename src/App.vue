@@ -323,6 +323,7 @@ body {
 
     .baseline {
       strong {
+        filter: drop-shadow(0 10px 10px rgba(255, 255, 255, 0.48));
         display: block;
       }
     }
