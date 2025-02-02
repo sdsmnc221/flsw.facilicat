@@ -84,10 +84,6 @@ const app = useTemplateRef<HTMLElement>("appEl");
 const logo = useTemplateRef<HTMLElement>("logoEl");
 const baseline = useTemplateRef<HTMLElement>("baselineEl");
 
-const { directions } = useScroll(app, {
-  behavior: "smooth",
-});
-
 const heading: Ref<HTMLElement | null> = ref(null);
 const scrollCount: Ref<number> = ref(0);
 
@@ -218,9 +214,8 @@ onMounted(() => {
       tl.to(heading.value.querySelector("span"), {
         duration: 2,
         ease: "power2.in",
-        x: "-42vw",
-        y: "-41.4vh",
-        color: "red",
+        top: "80px",
+        left: "110px",
         scale: 0.64,
       })
         .fromTo(
