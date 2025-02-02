@@ -237,5 +237,6 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   pointer-events: none;
+  filter: blur(2.4px) saturate(1.4);
 }
 </style>

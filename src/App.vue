@@ -1,79 +1,135 @@
-<script setup lang="ts">
-import WaterEffect from "./components/WaterEffect.vue";
-</script>
-
 <template>
-  <WaterEffect image-url="/chatpieces_background.jpg"></WaterEffect>
+  <div class="app" ref="appEl">
+    <WaterEffect image-url="/chatpieces_background.jpg"></WaterEffect>
 
-  <div class="shadow-overlay"></div>
-  <main>
-    <h1 class="ui-heading font-bold leading-none">
-      <img src="/border.png" alt="" />
-      <span class="color-blue inline-block pl-12 pt-12">
-        une campagne, <br />
-        qui deviendra <br />
-        bientôt <br />
-        un service.
-      </span>
-    </h1>
+    <div class="light-overlay"></div>
 
-    <h2 class="ui-subtitle leading-tight text-right text-white">
-      <img src="/logo.png" alt="Logo" />
-      <img
-        class="baseline"
-        src="/assembling.png"
-        alt="Là où le handicap sépare, FeliSweet assemble"
-      />
-      <p>
-        <span class="font-bold bg-sky-600"
-          >combinant expertise féline <br />
-          et service social,
+    <div class="shadow-overlay"></div>
+
+    <img class="border" src="/border.png" alt="" />
+
+    <main ref="mainEl">
+      <h1 ref="heading" class="ui-heading relative w-full h-[100vh] font-bold">
+        <span class="text-sky-100 text-3xl leading-tight inline-block">
+          une campagne, <br />
+          qui deviendra <br />
+          bientôt <br />
+          un service.
         </span>
-        <span class="bg-sky-700">
-          pour vous permettre <br />
-          de profiter sereinement de <br />
-          la présence apaisante de vos chats.
-        </span>
-      </p>
-    </h2>
-
-    <p class="ui-scan-code flex flex-col justify-center items-center">
-      <span class="ui-scan-code__heading text-sky-700 bg-sky-200 font-bold"
-        >Enquête de besoin</span
-      >
-      <a
-        href="https://felisweet.fillout.com/facilicat"
-        target="_blank"
-        title="Enquête de besoin"
-        class="link-qr"
-      >
-        <img src="/qr.png" alt="QR" />
-      </a>
-      <a
-        href="https://felisweet.fillout.com/facilicat"
-        target="_blank"
-        title="Enquête de besoin"
-        class="link-explicit text-white text-xs bg-sky-600"
-      >
-        <span>felisweet.fillout.com/facilicat</span>
-      </a>
-    </p>
-  </main>
+      </h1>
+    </main>
+  </div>
 </template>
 
-<style lang="scss" scoped>
+<script setup lang="ts">
+import { type Ref, ref, useTemplateRef, onMounted, nextTick, watch } from "vue";
+import { useScroll } from "@vueuse/core";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+import WaterEffect from "./components/WaterEffect.vue";
+
+const main = useTemplateRef<HTMLElement>("mainEl");
+const app = useTemplateRef<HTMLElement>("appEl");
+
+const { directions } = useScroll(app, {
+  behavior: "smooth",
+});
+
+const heading: Ref<HTMLElement | null> = ref(null);
+const scrollCount: Ref<number> = ref(0);
+
+onMounted(() => {
+  nextTick(() => {
+    if (heading.value) {
+      const tl = gsap.timeline({
+        paused: true,
+        scrollTrigger: {
+          trigger: heading.value,
+          start: "top top",
+          end: "bottom +=100px",
+          pin: true,
+          scrub: true,
+          markers: true,
+          onLeave: () => {
+            scrollCount.value += 1;
+          },
+          onEnterBack: () => {
+            scrollCount.value -= 1;
+          },
+        },
+      });
+
+      tl.to(heading.value.querySelector("span"), {
+        duration: 2,
+        ease: "power2.in",
+        x: "-42vw",
+        y: "-31vh",
+        color: "red",
+        scale: 0.64,
+      });
+    }
+  });
+});
+
+watch(
+  () => scrollCount.value,
+  () => {
+    console.log(scrollCount.value);
+
+    gsap.to([".light-overlay", ".border"], {
+      duration: 1.2,
+      ease: "power2.in",
+      opacity: scrollCount.value < 1 ? 0 : 1,
+    });
+  }
+);
+</script>
+
+<style lang="scss">
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  height: 100vh;
+}
+
+#app {
+  min-height: 200vh; // Double viewport height to allow scrolling
+  width: 100%;
+  position: relative;
+}
+
+main {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
 body {
   font-family: "Nunito", sans-serif;
   font-weight: 500;
   position: relative;
 
-  width: 100vw;
+  .light-overlay {
+    width: 160px;
+    height: 100px;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(255, 255, 255, 0.48) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    top: 32px;
+    left: 32px;
+    position: fixed;
+    z-index: -1;
+    transform: rotate(-2deg);
+    transform-origin: top left;
 
-  #app,
-  main {
-    width: 100vw;
-    height: 100vh;
-    overflow-x: hidden;
+    opacity: 0;
   }
 
   .shadow-overlay {
@@ -91,33 +147,25 @@ body {
     );
   }
 
-  .ui-heading {
-    &::after {
-      content: "";
-      display: block;
-      width: 160px;
-      height: 100px;
-      background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0.72) 0%,
-        rgba(255, 255, 255, 0.48) 50%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      top: 32px;
-      left: 32px;
-      position: absolute;
-      z-index: -1;
-      transform: rotate(-2deg);
-      transform-origin: top left;
-    }
+  .border {
+    position: fixed;
+    top: 32px;
+    left: 32px;
+    display: inline-block;
+    width: 100px;
+    height: auto;
+    border: none;
 
-    img {
+    opacity: 0;
+  }
+
+  .ui-heading {
+    span {
+      text-shadow: 4px 3px 0 rgba(0, 0, 0, 0.2);
       position: absolute;
-      top: 32px;
-      left: 32px;
-      display: inline-block;
-      width: 100px;
-      height: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 

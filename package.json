@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@types/three": "^0.172.0",
+    "@vueuse/core": "^12.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "gsap": "^3.12.7",
     "lucide-vue-next": "^0.473.0",
     "radix-vue": "^1.9.12",
     "tailwind-merge": "^2.6.0",
