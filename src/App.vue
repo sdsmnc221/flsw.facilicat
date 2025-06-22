@@ -9,53 +9,57 @@
     <img class="border" src="/border.png" alt="" />
 
     <main ref="mainEl">
-      <h1 ref="heading" class="ui-heading fixed w-full h-[100vh] font-bold">
-        <span
-          class="fx-shadow text-sky-100 text-3xl leading-tight inline-block"
-        >
-          une campagne, <br />
-          qui deviendra <br />
-          bientôt <br />
-          un service.
-        </span>
-      </h1>
+      <section class="intro fixed w-screen h-screen">
+        <h1 ref="heading" class="ui-heading fixed w-full h-[100vh] font-bold">
+          <span
+            class="fx-shadow text-sky-100 text-3xl leading-tight inline-block"
+          >
+            une campagne, <br />
+            qui deviendra <br />
+            bientôt <br />
+            un service.
+          </span>
+        </h1>
 
-      <h2
-        class="ui-subtitle fixed w-full h-[100vh] flex flex-col justify-center items-center"
-      >
-        <img ref="logoEl" src="/logo.png" alt="Logo" />
-        <span
-          ref="baselineEl"
-          class="baseline fx-shadow-white text-sky-700 text-4xl font-bold text-center leading-[1.4rem] uppercase inline-block"
+        <h2
+          class="ui-subtitle fixed w-full h-[100vh] flex flex-col justify-center items-center"
         >
-          Nous aidons
-          <strong
-            class="text-2xl leading-[1.4rem] font-semibold text-rose-700 lowercase"
+          <img ref="logoEl" src="/logo.png" alt="Logo" />
+          <span
+            ref="baselineEl"
+            class="baseline fx-shadow-white text-sky-700 mt-4 text-6xl font-bold text-center leading-[3rem] uppercase inline-block"
           >
-            les personnes en situation
-            <br />
-            <span class="text-6xl leading-[2rem]">de handicap</span>
-            <br />
-            <span class="text-lg leading-[1rem]" v-if="handicapText.length">
-              {{ handicapText }}</span
+            Nous aidons
+            <strong
+              class="text-4xl leading-[3rem] font-semibold text-rose-700 lowercase"
             >
-          </strong>
-          <strong
-            class="text-2xl leading-[1.4rem] font-semibold text-rose-700 lowercase"
-          >
-            <span class="text-4xl leading-[2rem]">
-              <span class="text-sky-100">ou</span> ayant des difficultés
+              les personnes en situation de handicap
+              <span class="text-2xl leading-[3rem]" v-if="handicapText.length">
+                {{ handicapText }}</span
+              >
+            </strong>
+            <strong
+              class="text-2xl leading-[3rem] font-semibold text-rose-700 lowercase"
+            >
+              <span class="text-4xl leading-[3rem]">
+                <span class="text-sky-100">ou</span> ayant des difficultés
+                <span class="text-2xl leading-[1rem]" v-if="troubleText.length">
+                  {{ troubleText }}</span
+                >
+              </span>
+            </strong>
+            <span class="text-5xl">
+              à s'occuper pleinement <br />
+              de leurs chats.
             </span>
-            <br />
-            <span class="text-lg leading-[1rem]" v-if="troubleText.length">
-              {{ troubleText }}</span
-            >
-          </strong>
-          <span class="text-xl"> à s'occuper pleinement de leurs chats. </span>
-        </span>
-      </h2>
+          </span>
+        </h2>
 
-      <div class="persona" />
+        <div class="persona" />
+      </section>
+      <section class="public w-screen h-screen bg-sky-300">
+        <h2>Notre Public</h2>
+      </section>
     </main>
   </div>
 </template>
@@ -277,8 +281,6 @@ body {
 }
 
 main {
-  height: 100vh;
-  width: 100%;
   position: relative;
 }
 
@@ -321,6 +323,30 @@ body {
     );
   }
 
+  h2 {
+    position: relative;
+
+    &::after {
+      z-index: -1;
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50%;
+      height: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.72) 0%,
+        rgba(255, 255, 255, 0) 50%
+      );
+      pointer-events: none;
+      border-radius: 100%;
+      filter: blur(12px);
+      backdrop-filter: blur(12px) brightness(2);
+    }
+  }
+
   .border {
     position: fixed;
     top: 32px;
@@ -334,7 +360,7 @@ body {
   }
 
   .fx-shadow {
-    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.72);
   }
 
   .fx-shadow-white {
