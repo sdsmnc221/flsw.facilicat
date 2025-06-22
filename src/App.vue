@@ -340,7 +340,7 @@ onMounted(() => {
       scrollTrigger: {
         trigger: mainEl.value,
         start: "top top",
-        end: `+=${window.innerHeight}px`,
+        end: `+=${window.innerHeight * 8}px`,
         pin: true,
         scrub: true,
         markers: true,
