@@ -92,9 +92,68 @@
             />
           </figure>
         </section>
-        <section class="h-screen bg-[#82c1e1]"><h2>Nos Objectifs</h2></section>
-        <section class="h-screen bg-sky-200"><h2>Nos Services</h2></section>
+        <section
+          class="h-screen bg-[#82c1e1] flex flex-col justify-center items-center"
+        >
+          <h2
+            class="baseline fx-shadow-white text-sky-700 text-6xl font-bold text-center leading-[3rem]inline-block"
+          >
+            Notre Objectifs
+          </h2>
+          <ul
+            class="text-2xl leading-[3rem] font-semibold text-cyan-700 text-center mt-4 w-1/3"
+          >
+            <li class="leading-[2rem] mb-2">
+              Aider les personnes en situation de handicap ayant des difficultés
+              à s'occuper pleinement de leurs chats
+            </li>
+            <li>Assurer le bien-être des animaux</li>
+            <li>Maintenir le lien affectif entre les humains et leurs chats</li>
+          </ul>
+        </section>
+        <section
+          class="h-screen bg-[#63a6c8] flex flex-col justify-center items-center"
+        >
+          <h2
+            class="baseline fx-shadow-white text-sky-700 text-6xl font-bold text-center leading-[3rem]inline-block"
+          >
+            Notre Services
+          </h2>
+          <ul
+            class="text-2xl leading-[3rem] font-semibold text-sky-200 text-center mt-4 w-1/3"
+          >
+            <li>Alimentation quotidienne</li>
+            <li>Nettoyage de la litière</li>
+            <li>Brossage et toilettage</li>
+            <li>Séances de jeu interactives</li>
+            <li>Visites régulières ou occasionnelles</li>
+            <li class="leading-[2rem] mb-2">
+              Administration de traitements pendant vos heures de travail
+            </li>
+          </ul>
+        </section>
       </section>
+
+      <aside
+        class="w-screen h-screen flex flex-col justify-center items-center"
+      >
+        <h3
+          class="baseline fx-shadow-white text-sky-700 text-7xl font-bold text-center leading-[3rem]inline-block"
+        >
+          Enquête de Besoin
+        </h3>
+
+        <!-- Fillout Embed Container -->
+        <div class="fillout-container w-[72vw] mx-auto mt-10">
+          <div
+            ref="filloutEmbed"
+            style="width: 100%; height: 600px"
+            data-fillout-id="49MgyhHsXrus"
+            data-fillout-embed-type="standard"
+            data-fillout-inherit-parameters
+          ></div>
+        </div>
+      </aside>
     </main>
   </div>
 </template>
@@ -122,6 +181,7 @@ const app = useTemplateRef<HTMLElement>("appEl");
 const logo = useTemplateRef<HTMLElement>("logoEl");
 const baseline = useTemplateRef<HTMLElement>("baselineEl");
 const publicSection = useTemplateRef<HTMLElement>("publicSectionEl");
+const filloutEmbed = useTemplateRef<HTMLElement>("filloutEmbed");
 
 const imascots = [
   "/chatpieces-permanent.png",
@@ -134,6 +194,7 @@ const imascots = [
 
 const heading: Ref<HTMLElement | null> = ref(null);
 const scrollCount: Ref<number> = ref(0);
+const filloutScriptLoaded: Ref<boolean> = ref(false);
 
 const handicapProgress: Ref<number> = ref(0);
 const handicapText: ComputedRef<string> = computed(() => {
@@ -166,6 +227,40 @@ const troubleText: ComputedRef<string> = computed(() => {
   }
   return "";
 });
+
+const loadFilloutScript = () => {
+  if (filloutScriptLoaded.value) return Promise.resolve();
+
+  return new Promise<void>((resolve, reject) => {
+    // Check if script already exists
+    if (
+      document.querySelector(
+        'script[src="https://server.fillout.com/embed/v1/"]'
+      )
+    ) {
+      filloutScriptLoaded.value = true;
+      resolve();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://server.fillout.com/embed/v1/";
+    script.async = true;
+
+    script.onload = () => {
+      filloutScriptLoaded.value = true;
+      console.log("Fillout script loaded successfully");
+      resolve();
+    };
+
+    script.onerror = () => {
+      console.error("Failed to load Fillout script");
+      reject(new Error("Failed to load Fillout script"));
+    };
+
+    document.head.appendChild(script);
+  });
+};
 
 const scrollPersona = () => {
   const personaTl = gsap.timeline({
@@ -236,6 +331,9 @@ const scrollPersona = () => {
 };
 
 onMounted(() => {
+  // Load Fillout script when component mounts
+  loadFilloutScript().catch(console.error);
+
   nextTick(() => {
     const tl = gsap.timeline({
       paused: true,
