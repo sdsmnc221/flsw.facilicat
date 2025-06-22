@@ -59,11 +59,41 @@
       </section>
       <section
         ref="publicSection"
-        class="public w-screen min-h-screen relative top-[600vh] bg-sky-200"
+        class="public w-screen min-h-screen relative"
       >
-        <section class="h-screen"><h2>Notre Public</h2></section>
-        <section class="h-screen"><h2>Nos Objectifs</h2></section>
-        <section class="h-screen"><h2>Nos Services</h2></section>
+        <section
+          class="w-full h-screen flex flex-col justify-center items-center bg-sky-200"
+        >
+          <h2
+            class="baseline fx-shadow-white text-sky-700 mt-4 text-6xl font-bold text-center leading-[3rem]inline-block"
+          >
+            Notre Public
+          </h2>
+          <ul
+            class="text-2xl leading-[3rem] font-semibold text-cyan-600 text-center mt-4 w-1/3"
+          >
+            <li>Personnes en situation de handicap</li>
+            <li>Personnes âgées & Femmes enceintes</li>
+            <li class="leading-[2rem] mb-2">
+              Personnes actives ne pouvant pas administrer les traitements
+              pendant leurs horaires de travail
+            </li>
+            <li class="font-bold text-cyan-700 leading-[2rem]">
+              Toute personne se trouvant en difficulté physique provisoire ou
+              permanente
+            </li>
+          </ul>
+          <figure class="flex mt-10">
+            <img
+              v-for="mascot in imascots"
+              :key="mascot"
+              :src="mascot"
+              class="w-48 h-48"
+            />
+          </figure>
+        </section>
+        <section class="h-screen bg-[#82c1e1]"><h2>Nos Objectifs</h2></section>
+        <section class="h-screen bg-sky-200"><h2>Nos Services</h2></section>
       </section>
     </main>
   </div>
@@ -92,6 +122,15 @@ const app = useTemplateRef<HTMLElement>("appEl");
 const logo = useTemplateRef<HTMLElement>("logoEl");
 const baseline = useTemplateRef<HTMLElement>("baselineEl");
 const publicSection = useTemplateRef<HTMLElement>("publicSectionEl");
+
+const imascots = [
+  "/chatpieces-permanent.png",
+  "/chatpieces-temporary.png",
+  "/chatpieces-pregnant.png",
+  "/chatpieces-invisible.png",
+  "/chatpieces-working.png",
+  "/chatpieces-traveling.png",
+];
 
 const heading: Ref<HTMLElement | null> = ref(null);
 const scrollCount: Ref<number> = ref(0);
@@ -198,6 +237,18 @@ const scrollPersona = () => {
 
 onMounted(() => {
   nextTick(() => {
+    const tl = gsap.timeline({
+      paused: true,
+      scrollTrigger: {
+        trigger: mainEl.value,
+        start: "top top",
+        end: `+=${window.innerHeight}px`,
+        pin: true,
+        scrub: true,
+        markers: true,
+      },
+    });
+
     if (heading.value && logo.value) {
       const tl = gsap.timeline({
         paused: true,
