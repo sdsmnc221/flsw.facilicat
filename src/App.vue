@@ -9,7 +9,7 @@
     <img class="border" src="/border.png" alt="" />
 
     <main ref="mainEl">
-      <section class="intro fixed w-screen h-screen">
+      <section class="intro w-screen h-screen">
         <h1 ref="heading" class="ui-heading fixed w-full h-[100vh] font-bold">
           <span
             class="fx-shadow text-sky-100 text-3xl leading-tight inline-block"
@@ -57,8 +57,13 @@
 
         <div class="persona" />
       </section>
-      <section class="public w-screen h-screen bg-sky-300">
-        <h2>Notre Public</h2>
+      <section
+        ref="publicSection"
+        class="public w-screen min-h-screen relative top-[600vh] bg-sky-200"
+      >
+        <section class="h-screen"><h2>Notre Public</h2></section>
+        <section class="h-screen"><h2>Nos Objectifs</h2></section>
+        <section class="h-screen"><h2>Nos Services</h2></section>
       </section>
     </main>
   </div>
@@ -75,7 +80,6 @@ import {
   nextTick,
   watch,
 } from "vue";
-import { useScroll } from "@vueuse/core";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -83,10 +87,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 import WaterEffect from "./components/WaterEffect.vue";
 
-const main = useTemplateRef<HTMLElement>("mainEl");
+const mainEl = useTemplateRef<HTMLElement>("mainEl");
 const app = useTemplateRef<HTMLElement>("appEl");
 const logo = useTemplateRef<HTMLElement>("logoEl");
 const baseline = useTemplateRef<HTMLElement>("baselineEl");
+const publicSection = useTemplateRef<HTMLElement>("publicSectionEl");
 
 const heading: Ref<HTMLElement | null> = ref(null);
 const scrollCount: Ref<number> = ref(0);
@@ -410,37 +415,6 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-  }
-
-  .ui-scan-code {
-    transform: translateY(10vh);
-
-    &__heading {
-      filter: drop-shadow(2px 1px 0px rgb(255, 255, 255));
-    }
-
-    .link-qr {
-      margin-top: -10px;
-    }
-
-    .link-explicit {
-      filter: drop-shadow(0 10px 20px rgba(255, 255, 255, 1));
-    }
-
-    img {
-      filter: drop-shadow(0 10px 20px rgba(255, 255, 255, 1));
-      background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 0.72) 0%,
-        rgba(255, 255, 255, 0) 72%
-      );
-      width: 160px;
-      height: auto;
-    }
-
-    .link-explicit {
-      margin-top: -24px;
-    }
   }
 
   @media screen and (max-width: 768px) {
